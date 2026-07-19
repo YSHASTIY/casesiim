@@ -195,6 +195,11 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.innerHTML = '<i class="fa-solid fa-spinner ' + (isFastOpen ? '' : 'fa-spin') + '"></i> ' + (isFastOpen ? 'Выдаем...' : 'Открываем...');
         btn.classList.toggle('is-fast', isFastOpen);
 
+        // Прячем название/описание кейса, пока идёт открытие — ленты рулетки
+        // растягиваются на всю ширину полотна.
+        var openingSection = document.querySelector('.opening');
+        if (openingSection) openingSection.classList.add('is-spinning');
+
         window.balance -= totalPrice;
         window.updateBalance();
 
@@ -337,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fastOpenBtn.closest('.fast-open-wrapper').classList.remove('is-active');
           }
           isFastOpen = false;
+          if (openingSection) openingSection.classList.remove('is-spinning');
           initRoulettes(currentCount);
         }
 

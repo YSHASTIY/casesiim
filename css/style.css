@@ -3096,3 +3096,134 @@ footer div {
 
 .price-updated { font-size: 10px; color: var(--muted); margin-top: 8px; letter-spacing: .03em; }
 .cases .price-updated, .page-title .price-updated { margin-top: 4px; }
+
+/* ========================================================
+   РЕАЛЬНЫЕ СКИНЫ: АПГРЕЙД / КОНТРАКТЫ (rev.3)
+   ======================================================== */
+
+/* --- Апгрейд: картинка скина вместо иконки --- */
+.upgrade-tile > img {
+  display: block;
+  width: 100%;
+  height: 52px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+  filter: drop-shadow(0 0 10px rgba(245, 193, 86, .18));
+}
+
+.upgrade-tile.big > img {
+  height: 66px;
+}
+
+.target-hero-tile > img {
+  display: block;
+  width: 100%;
+  height: 80px;
+  object-fit: contain;
+  margin: 0 auto 10px;
+  filter: drop-shadow(0 0 16px rgba(245, 193, 86, .3));
+}
+
+.upgrade-target-row > img {
+  width: 42px;
+  height: 32px;
+  object-fit: contain;
+  flex: 0 0 42px;
+}
+
+/* --- Контракты: картинка + износ + цвет редкости --- */
+.contract-item {
+  position: relative;
+}
+
+.contract-item img {
+  display: block;
+  width: 100%;
+  height: 56px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+}
+
+.contract-item small.wear {
+  display: block;
+  color: var(--muted);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  margin: 3px 0 4px;
+}
+
+.contract-modal .result-image {
+  display: block;
+  width: 100%;
+  height: 100px;
+  object-fit: contain;
+  margin: 6px auto 8px;
+  filter: drop-shadow(0 0 20px rgba(245, 193, 86, .4));
+}
+
+.contract-modal .result-wear {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  margin: -4px 0 8px;
+}
+
+/* ========================================================
+   ОТКРЫТИЕ КЕЙСА: РУЛЕТКА НА ВСЮ ШИРИНУ (rev.3)
+   ======================================================== */
+
+/* Во время спина название/описание кейса уходят — ленты растягиваются
+   на всю ширину полотна. */
+.opening {
+  transition: grid-template-columns .45s cubic-bezier(.2, .7, .2, 1);
+}
+
+.opening.is-spinning {
+  grid-template-columns: 0fr 1fr;
+}
+
+.opening-info {
+  min-width: 0;
+  transition: opacity .3s ease, padding .3s ease;
+}
+
+.opening.is-spinning .opening-info {
+  opacity: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.opening.is-spinning .roulette-lane {
+  box-shadow: 0 0 26px rgba(245, 193, 86, .16);
+}
+
+/* Несколько лент — по 2 в ряд. Если дорожек нечётное число, последняя
+   растягивается на всю ширину, а не остаётся половинчатой. */
+.roulettes-container.multi {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.roulettes-container.multi .roulette-lane:nth-child(odd):last-child {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .opening.is-spinning {
+    grid-template-columns: 1fr;
+  }
+
+  .roulettes-container.multi {
+    grid-template-columns: 1fr;
+  }
+
+  .roulettes-container.multi .roulette-lane:nth-child(odd):last-child {
+    grid-column: auto;
+  }
+}
