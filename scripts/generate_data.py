@@ -286,8 +286,23 @@ def main():
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
     size_js = os.path.getsize(js_path)
-    print("Wrote {} ({:.1f} KB) + data.js ({:.1f} KB) in {:.1f}s".format(
-        OUT, size / 1024, size_js / 1024, time.time() - t0), flush=True)
+
+    # Phase 2 — extensible seed: full priced skin pool for admin import.
+    # data/skins-pool.json is a flat array in the admin import format
+    # ({name, tier, price, image, wear, rarityName, marketUrl, ...}), covering
+    # EVERY priced skin we could resolve (not just the 5 curated cases).
+    pool_path = os.path.join(os.path.dirname(OUT), "skins-pool.json")
+    pool_export = [{
+        "id": it["id"], "name": it["name"], "image": it["image"], "tier": it["tier"],
+        "rarityName": it["rarityName"], "rarityColor": it["rarityColor"],
+        "price": it["dropVariant"]["price"], "minPrice": it["minPrice"],
+        "wear": it["dropVariant"]["wear"], "dropVariant": it["dropVariant"],
+        "marketUrl": it["marketUrl"],
+    } for it in pool]
+    with open(pool_path, "w", encoding="utf-8") as f:
+        json.dump(pool_export, f, ensure_ascii=False, separators=(",", ":"))
+    print("Wrote {} ({:.1f} KB) + data.js ({:.1f} KB) + skins-pool.json ({} skins) in {:.1f}s".format(
+        OUT, size / 1024, size_js / 1024, len(pool_export), time.time() - t0), flush=True)
 
 
 if __name__ == "__main__":

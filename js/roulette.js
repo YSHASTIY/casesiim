@@ -23,6 +23,20 @@ document.addEventListener('DOMContentLoaded', function () {
       covert: '#eb4b4b', rare: '#e4ae39' }[tier] || '#5e98d9';
   }
 
+  // История открытий (для дашборда «открытий сегодня» и RTP-метрик).
+  function recordOpening(userId, caseObj, item) {
+    try {
+      var hist = JSON.parse(store.lsGet('crate-open-history', '[]') || '[]');
+      hist.unshift({
+        at: new Date().toISOString(), userId: userId, caseId: caseObj.id,
+        casePrice: caseObj.priceRub, itemName: item.name,
+        itemPrice: Number(item.dropVariant.price), tier: item.tier
+      });
+      if (hist.length > 1000) hist.length = 1000;
+      store.lsSet('crate-open-history', JSON.stringify(hist));
+    } catch (e) {}
+  }
+
   function init() {
     var data = window.CRATE.data;
     if (!data || !data.cases || !data.cases.length) return;
@@ -30,14 +44,21 @@ document.addEventListener('DOMContentLoaded', function () {
     var caseId = (new URLSearchParams(location.search).get('case')) || store.lsGet('crate-selected-case', 'pulse');
     var selected = data.cases.find(function (c) { return c.id === caseId; }) || data.cases[0];
     var price = selected.priceRub;
-    var skins = selected.items;
+    var skins = (selected.items || []).filter(function (s) { return s.active !== false; });
 
-    // вероятности по предметам
-    var tierCount = {};
-    skins.forEach(function (s) { tierCount[s.tier] = (tierCount[s.tier] || 0) + 1; });
-    skins.forEach(function (s) {
-      s._chance = (TIER_WEIGHT[s.tier] || 0) / (tierCount[s.tier] || 1);
-    });
+    var Pricing = window.CratePricing, Drop = window.CrateDrop, Profit = window.CrateProfit;
+
+    // Нормализованные шансы (учитывают per-skin weight из админки). Сервисный
+    // слой — единый источник истины и для сайта, и для тестов.
+    if (Pricing) {
+      var chanceMap = {};
+      Pricing.chances(skins).forEach(function (r) { chanceMap[r.item.id || r.item.name] = r.chance; });
+      skins.forEach(function (s) { s._chance = chanceMap[s.id || s.name] || 0; });
+    } else {
+      var tierCount = {};
+      skins.forEach(function (s) { tierCount[s.tier] = (tierCount[s.tier] || 0) + 1; });
+      skins.forEach(function (s) { s._chance = (TIER_WEIGHT[s.tier] || 0) / (tierCount[s.tier] || 1); });
+    }
 
     var caseNameDisplay = selected.name.charAt(0) + selected.name.slice(1).toLowerCase();
     document.querySelector('[data-case-name]').textContent = caseNameDisplay;
@@ -200,16 +221,36 @@ document.addEventListener('DOMContentLoaded', function () {
         var openingSection = document.querySelector('.opening');
         if (openingSection) openingSection.classList.add('is-spinning');
 
+        // Профиль игрока и стартовый баланс дня фиксируются ДО списания,
+        // чтобы кап считался от реального баланса на начало дня.
+        var userId = Profit ? Profit.getUserId() : 'anon';
+        if (Profit) Profit.getDailyState(userId, window.balance);
+
         window.balance -= totalPrice;
         window.updateBalance();
 
         var chosenIndices = [];
         var results = [];
+        var runningBalance = window.balance + totalPrice; // баланс до открытия текущего кейса
+        var settings = Profit ? Profit.getSettings() : null;
         for (var i = 0; i < currentCount; i++) {
-          var winIndex = rollItem();
+          var winIndex;
+          if (Drop && Pricing) {
+            var decision = Drop.rollDrop({
+              items: skins, userId: userId, currentBalance: runningBalance,
+              casePrice: price, settings: settings
+            });
+            winIndex = skins.indexOf(decision.item);
+            if (winIndex < 0) winIndex = 0;
+          } else {
+            winIndex = rollItem();
+          }
           chosenIndices.push(winIndex);
           results.push(skins[winIndex]);
+          runningBalance = runningBalance - price + Number(skins[winIndex].dropVariant.price);
+          recordOpening(userId, selected, skins[winIndex]);
         }
+        if (Profit) Profit.bumpDailyState(userId, { openings: (Profit.getDailyState(userId, runningBalance).openings || 0) + currentCount });
 
         // Инвентарь (сессия)
         var inventory = JSON.parse(store.ssGet('crate-inventory') || '[]');
