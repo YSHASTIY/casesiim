@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crate — Контракты</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="cursor-glow"></div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">CR<span>A</span>TE</a>
+    <button class="menu-toggle" aria-label="Открыть меню">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="cases.html">Кейсы</a>
+      <a href="modes.html">Режимы</a>
+      <a class="active" href="contracts.html">Контракты</a>
+      <a href="upgrade.html">Апгрейд</a>
+    </nav>
+    <div class="header-actions">
+      <button class="balance">
+        <i class="fa-solid fa-gem"></i>
+        <b data-balance>2 450</b>
+      </button>
+      <button class="topup" aria-label="Получить игровые кристаллы">
+        <i class="fa-solid fa-plus"></i><span>Кристаллы</span>
+      </button>
+      <a class="avatar" href="profile.html">M</a>
+    </div>
+  </header>
+
+  <!-- Лайв-лента -->
+  <div class="live-drops-container">
+    <div class="live-drops-header">
+      <span class="eyebrow">ПУЛЬС ПЛАТФОРМЫ</span>
+      <span class="live-dot">LIVE</span>
+    </div>
+    <div class="drops-wrap">
+      <div class="drops" data-drops></div>
+    </div>
+  </div>
+
+  <main class="inner">
+    <div class="page-title">
+      <div>
+        <span class="eyebrow">МУТАЦИЯ КОЛЛЕКЦИИ</span>
+        <h1>Контракты</h1>
+      </div>
+    </div>
+
+    <section class="contract-section">
+      <div class="contract-info">
+        <p>
+          Выберите от 3 до 5 предметов из инвентаря.
+          Контракт превратит их в один предмет более высокого класса.
+        </p>
+        <div class="selected-items" data-selected-items>
+          <span class="placeholder">Выберите минимум 3 предмета</span>
+        </div>
+        <button class="button primary create-contract" disabled>Создать контракт</button>
+      </div>
+      <div class="contract-selection" data-contract-inventory></div>
+    </section>
+  </main>
+
+  <div class="contract-modal">
+    <div>
+      <span class="eyebrow">КОНТРАКТ ВЫПОЛНЕН</span>
+      <i class="fa-solid fa-gem"></i>
+      <h2 class="result-name">★ Bayonet · Apex</h2>
+      <p>Стоимость: <span class="result-value">2500</span> кристаллов</p>
+      <button class="button primary close-modal">Забрать в инвентарь</button>
+    </div>
+  </div>
+
+  <div class="toast"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/contracts.js"></script>
+</body>
+</html>
