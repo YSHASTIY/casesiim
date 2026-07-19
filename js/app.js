@@ -55,15 +55,25 @@
   }
   window.toast = toast;
 
+  // Применяет админ-overlay (правки кейсов/цен из localStorage) поверх базовых
+  // данных и оставляет только опубликованные кейсы для публичного сайта.
+  function applyOverlay(base) {
+    var merged = window.CrateCatalog ? window.CrateCatalog.merge(base) : base;
+    if (merged && merged.cases) {
+      merged.cases = merged.cases.filter(function (c) { return c.published !== false; });
+    }
+    return merged;
+  }
+
   // Загрузка данных. Предпочитаем встроенный window.CRATE_DATA (из data/data.js) —
   // работает даже по file://, где fetch блокируется. Иначе fallback на fetch.
   window.CRATE = {
-    data: window.CRATE_DATA || null,
+    data: window.CRATE_DATA ? applyOverlay(window.CRATE_DATA) : null,
     ready: window.CRATE_DATA
-      ? Promise.resolve(window.CRATE_DATA)
+      ? Promise.resolve(applyOverlay(window.CRATE_DATA))
       : fetch(DATA_URL, { cache: 'no-cache' })
           .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-          .then(function (d) { window.CRATE.data = d; return d; })
+          .then(function (d) { d = applyOverlay(d); window.CRATE.data = d; return d; })
           .catch(function (err) {
             console.error('[CRATE] Не удалось загрузить data/items.json:', err);
             document.querySelectorAll('[data-cases], [data-items], [data-drops]').forEach(function (el) {
