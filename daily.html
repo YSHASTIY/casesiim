@@ -1,80 +1,4 @@
-<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crate — Лидеры</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="index.html">CR<span>A</span>TE</a>
-    <nav>
-      <a href="index.html">Главная</a>
-      <a href="case.html">Кейсы</a>
-      <a href="modes.html">Режимы</a>
-      <a href="contracts.html">Контракты</a>
-      <a href="upgrade.html">Апгрейд</a>
-      <a class="active" href="leaderboard.html">Лидеры</a>
-    </nav>
-    <div class="header-actions">
-      <a class="avatar" href="profile.html">M</a>
-    </div>
-  </header>
-
-  <main class="inner">
-    <div class="page-title">
-      <div>
-        <span class="eyebrow">СЕЗОН 09</span>
-        <h1>Таблица лидеров</h1>
-      </div>
-    </div>
-
-    <div class="leader-podium">
-      <article>
-        <b>02</b>
-        <i>V</i>
-        <h3>Vortex</h3>
-        <span>18 420 ₽</span>
-      </article>
-      <article class="first">
-        <b>01</b>
-        <i>A</i>
-        <h3>Artemis</h3>
-        <span>24 890 ₽</span>
-      </article>
-      <article>
-        <b>03</b>
-        <i>N</i>
-        <h3>NeonFox</h3>
-        <span>15 760 ₽</span>
-      </article>
-    </div>
-
-    <div class="leader-list" data-leaders></div>
-  </main>
-
-  <script src="data/data.js"></script><script src="js/app.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var names = ['Maverick', 'Tetra', 'Maya', 'Ghostline', 'Kaito', 'Sven', 'Volt'];
-      var list = document.querySelector('[data-leaders]');
-      if (list) {
-        list.innerHTML = names.map(function(name, i) {
-          return '<article>' +
-            '<b>#' + (i + 4) + '</b>' +
-            '<i>' + name[0] + '</i>' +
-            '<strong>' + name + '</strong>' +
-            '<span>ур. ' + (36 - i) + '</span>' +
-            '<em>' + (10840 - i * 731).toLocaleString('ru-RU') + ' <small>◆</small></em>' +
-            '</article>';
-        }).join('');
-      }
-    });
-  </script>
-<script data-pplx-inline-edit>
+<!doctype html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Crate — Ежедневные задания</title><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"><link rel="stylesheet" href="css/style.css"></head><body><header class="topbar"><a class="brand" href="index.html">CR<span>A</span>TE</a></header><main class="inner"><div class="page-title"><div><span class="eyebrow">ОБНОВЛЕНИЕ ЧЕРЕЗ 08:42:11</span><h1>Ежедневные задания</h1></div></div><div class="quest-list"><article><i class="fa-solid fa-box-open"></i><div><b>Открой 3 кейса</b><small>2 из 3</small><div class="progress"><i style="width:66%"></i></div></div><strong>+80</strong></article><article><i class="fa-solid fa-bolt"></i><div><b>Сыграй в Orbit</b><small>Готово</small><div class="progress complete"><i style="width:100%"></i></div></div><strong>+100</strong></article><article><i class="fa-solid fa-layer-group"></i><div><b>Улучши предмет</b><small>0 из 1</small><div class="progress"><i style="width:8%"></i></div></div><strong>+120</strong></article></div></main><script data-pplx-inline-edit>
 (function () {
   if (window === window.top) return;
 
@@ -402,5 +326,4 @@
 })();
 
 
-</script></body>
-</html>
+</script></body></html>
